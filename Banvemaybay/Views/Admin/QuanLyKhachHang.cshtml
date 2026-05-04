@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Banvemaybay.Models.TaiKhoan>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Danh Sách Khách Hàng";
+    var thongKeVe = ViewBag.ThongKeVe as Dictionary<string, int> ?? new Dictionary<string, int>();
+}
+
+<div class="card shadow-sm border-0 rounded" style="border-radius: 10px;">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover text-center align-middle mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="py-3">ID Tài Khoản</th>
+                        <th>Họ & Tên</th>
+                        <th>Số Điện Thoại</th>
+                        <th>Lịch Sử Đặt Vé</th>
+                        <th>Trạng Thái</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            int soVe = thongKeVe.ContainsKey(item.SoDienThoai) ? thongKeVe[item.SoDienThoai] : 0;
+                            <tr>
+                                <td class="fw-bold text-muted">USER-@item.Id</td>
+                                <td class="fw-bold text-primary">@item.HoTen</td>
+                                <td><span class="badge bg-secondary fs-6">@item.SoDienThoai</span></td>
+                                <td>
+                                    @if (soVe > 0)
+                                    {
+                                        <span class="badge bg-success px-3 py-2">Đã mua @soVe vé</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">Chưa đặt vé</span>
+                                    }
+                                </td>
+                                <td><i class="fas fa-check-circle text-success fs-5"></i> Đang hoạt động</td>
+                                <td>
+                                    <a href="/Admin/XoaKhachHang/@item.Id" class="btn btn-outline-danger btn-sm rounded fw-bold" onclick="return confirm('Cảnh báo: Bạn có muốn XÓA TÀI KHOẢN của @item.HoTen không? Lịch sử đặt vé vẫn sẽ được giữ lại.');">
+                                        <i class="fas fa-user-slash"></i> Khóa / Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="6" class="text-center py-5 text-muted fs-5">Chưa có khách hàng nào đăng ký.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

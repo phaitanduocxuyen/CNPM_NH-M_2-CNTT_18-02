@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Travelz</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Banvemaybay.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body>
+    <header>
+        <div class="top-bar text-white py-1 w-100" style="font-size: 12px; position: absolute; top: 0; z-index: 1001; background-color: rgba(0,0,0,0.5);">
+            <div class="container d-flex justify-content-between align-items-center">
+                <div>Một Phút Là Xong</div>
+                <div>
+                    <i class="fab fa-facebook-f mx-2 cursor-pointer"></i>
+                    <i class="fab fa-instagram mx-2 cursor-pointer"></i>
+                    <i class="fab fa-linkedin-in mx-2 cursor-pointer"></i>
+                    <i class="fab fa-google-plus-g mx-2 cursor-pointer"></i>
+                    <i class="fab fa-twitter mx-2 cursor-pointer"></i>
+                    <i class="fas fa-rss mx-2 cursor-pointer"></i>
+                </div>
+                <div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a asp-controller="TaiKhoan" asp-action="HoSo" class="text-info text-decoration-none me-3 fw-bold" title="Xem hồ sơ & vé của tôi">
+                            <i class="fas fa-user-circle fs-5 align-middle"></i> Xin chào, @User.Identity.Name!
+                        </a>
+                        <a asp-controller="TaiKhoan" asp-action="DangXuat" class="text-warning text-decoration-none"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="TaiKhoan" asp-action="DangKy" class="text-white text-decoration-none me-3"><i class="fas fa-user-plus"></i> Đăng Ký</a>
+                        <a asp-controller="TaiKhoan" asp-action="DangNhap" class="text-white text-decoration-none"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm w-100" style="position: absolute; top: 28px; z-index: 1000; background-color: rgba(0,0,0,0.2);">
+            <div class="container pt-2 pb-2">
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                        <i class="fas fa-plane" style="transform: rotate(-45deg); font-size: 20px;"></i>
+                    </div>
+                    <span class="fw-bold" style="font-size: 28px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; letter-spacing: -1px;">
+                        <span style="color: #00bcd4;">Travel</span><span style="color: #e53935;">z</span>
+                    </span>
+                </a>
+                <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    <ul class="navbar-nav text-uppercase fw-bold align-items-center" style="font-size: 13px;">
+                        <li class="nav-item ms-3"><a class="nav-link" style="color: #00bcd4;" asp-area="" asp-controller="Home" asp-action="Index">HOME</a></li>
+                        <li class="nav-item ms-3"><a class="nav-link text-white" href="#">CHECK IN ONLINE</a></li>
+                        <li class="nav-item ms-3"><a class="nav-link text-white" asp-controller="ChuyenBay" asp-action="DanhSach">DÀNH CHO BẠN</a></li>
+                        <li class="nav-item ms-3"><a class="nav-link text-white" href="#">LIÊN HỆ</a></li>
+                        <li class="nav-item ms-3"><a class="nav-link text-white" href="#">BÀI VIẾT</a></li>
+                        <li class="nav-item ms-3"><a class="nav-link text-white" href="#">VỀ CHÚNG TÔI</a></li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item ms-3">
+                                <a class="nav-link text-warning fs-5" asp-controller="Admin" asp-action="Index" title="Trang Quản Trị"><i class="fas fa-cog"></i></a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div>
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="text-white mt-5" style="background-color: #2d3436; padding: 60px 0 20px 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-warning text-dark rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 40px; height: 40px;">
+                            <i class="fas fa-plane" style="transform: rotate(-45deg); font-size: 20px;"></i>
+                        </div>
+                        <span class="fw-bold" style="font-size: 28px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; letter-spacing: -1px;">
+                            <span style="color: #00bcd4;">Travel</span><span style="color: #e53935;">z</span>
+                        </span>
+                    </div>
+                    <p class="text-light" style="font-size: 14px; opacity: 0.8;">Travelz là hệ thống đặt vé máy bay trực tuyến hàng đầu, mang đến cho bạn những chuyến bay an toàn, tiện lợi với mức giá ưu đãi nhất.</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5 class="fw-bold mb-3" style="color: #00bcd4;">Liên Kết Nhanh</h5>
+                    <ul class="list-unstyled" style="line-height: 2.2;">
+                        <li><a href="/" class="text-light text-decoration-none" style="opacity: 0.8;">Trang chủ</a></li>
+                        <li><a href="#" class="text-light text-decoration-none" style="opacity: 0.8;">Check-in Online</a></li>
+                        <li><a href="#" class="text-light text-decoration-none" style="opacity: 0.8;">Khuyến mãi</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-5 mb-4">
+                    <h5 class="fw-bold mb-3" style="color: #00bcd4;">Liên Hệ Hỗ Trợ</h5>
+                    <ul class="list-unstyled text-light" style="font-size: 14px; line-height: 1.8; opacity: 0.8;">
+                        <li><i class="fas fa-phone-alt me-2 text-danger"></i> Hotline: <strong>1900 1234</strong> (24/7)</li>
+                        <li><i class="fas fa-envelope me-2 text-danger"></i> Email: support@travelz.com.vn</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-secondary mt-4 mb-4" style="opacity: 0.3;">
+            <div class="text-center text-light" style="font-size: 13px; opacity: 0.6;">
+                &copy; 2026 - Bản quyền thuộc về Công ty TNHH Travelz Việt Nam. Cung cấp bởi <strong>ASP.NET Core</strong>.
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

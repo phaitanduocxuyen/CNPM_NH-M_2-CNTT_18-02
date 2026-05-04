@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Banvemaybay.Models.SanBay>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Quản Lý Sân Bay";
+}
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow border-0" style="border-radius: 10px;">
+            <div class="card-header bg-primary text-white fw-bold py-3">
+                <i class="fas fa-plus-circle"></i> THÊM SÂN BAY MỚI
+            </div>
+            <div class="card-body bg-white">
+                <form action="/Admin/ThemSanBay" method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Mã Sân Bay</label>
+                        <input type="text" name="MaSanBay" class="form-control" placeholder="VD: SGN, HAN, DAD..." required style="text-transform: uppercase;" />
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Tên Thành Phố</label>
+                        <input type="text" name="TenThanhPho" class="form-control" placeholder="VD: Hồ Chí Minh, Hà Nội..." required />
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold fs-5 py-2">THÊM VÀO HỆ THỐNG</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow border-0" style="border-radius: 10px;">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered text-center align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th class="py-3">Mã Sân Bay</th>
+                                <th>Tên Thành Phố</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white">
+                            @if (Model != null && Model.Any())
+                            {
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td><span class="badge bg-info text-dark fs-6 px-3 py-2">@item.MaSanBay</span></td>
+                                        <td class="fw-bold fs-5 text-primary">@item.TenThanhPho</td>
+                                        <td>
+                                            <a href="/Admin/XoaSanBay/@item.Id" class="btn btn-danger btn-sm rounded fw-bold" onclick="return confirm('Xóa sân bay @item.TenThanhPho ra khỏi hệ thống?');">
+                                                <i class="fas fa-trash-alt"></i> Xóa
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

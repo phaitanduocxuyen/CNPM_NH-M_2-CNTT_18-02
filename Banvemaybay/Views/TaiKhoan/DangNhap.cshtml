@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Đăng Nhập";
+}
+
+<div class="container mt-5 pt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0 rounded-lg mt-5">
+                <div class="card-header text-white text-center py-3" style="background-color: #00bcd4;">
+                    <h4 class="font-weight-light my-2 fw-bold"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</h4>
+                </div>
+                <div class="card-body p-4">
+                    @if (TempData["ThongBao"] != null)
+                    {
+                        <div class="alert alert-success text-center">@TempData["ThongBao"]</div>
+                    }
+                    @if (ViewBag.Loi != null)
+                    {
+                        <div class="alert alert-danger text-center">@ViewBag.Loi</div>
+                    }
+
+                    <form asp-action="DangNhap" method="post">
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="soDienThoai" name="soDienThoai" type="text" placeholder="Số điện thoại" required />
+                            <label for="soDienThoai">Số điện thoại</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input class="form-control" id="matKhau" name="matKhau" type="password" placeholder="Mật khẩu" required />
+                            <label for="matKhau">Mật khẩu</label>
+                        </div>
+
+                        <div class="d-flex align-items-center justify-content-between mt-4 mb-3">
+                            <a class="small text-decoration-none text-muted" href="#" onclick="alert('Tính năng đang phát triển!')">Quên mật khẩu?</a>
+                            <button class="btn text-white px-4 fw-bold" style="background-color: #00bcd4;" type="submit">ĐĂNG NHẬP</button>
+                        </div>
+
+                        <div class="d-flex align-items-center my-3">
+                            <hr class="flex-grow-1">
+                            <span class="mx-2 text-muted small">HOẶC</span>
+                            <hr class="flex-grow-1">
+                        </div>
+
+                        <button type="button" class="btn btn-outline-danger w-100 mb-2 fw-bold" onclick="alert('Tính năng đăng nhập Google đang phát triển!')">
+                            <i class="fab fa-google me-2"></i> Đăng nhập bằng Google
+                        </button>
+                        <button type="button" class="btn btn-outline-primary w-100 fw-bold" onclick="alert('Tính năng đăng nhập Facebook đang phát triển!')">
+                            <i class="fab fa-facebook-f me-2"></i> Đăng nhập bằng Facebook
+                        </button>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3 bg-light">
+                    <div class="small"><a asp-action="DangKy" class="text-decoration-none text-danger">Chưa có tài khoản? Đăng ký ngay!</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

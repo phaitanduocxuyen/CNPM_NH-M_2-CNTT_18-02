@@ -1,0 +1,476 @@
+﻿@using Banvemaybay.Models
+@{
+    ViewData["Title"] = "Trang chủ";
+    var dsSanBay = ViewBag.DanhSachSanBay as List<SanBay> ?? new List<SanBay>();
+    var dsUuDai = ViewBag.DanhSachUuDai as List<ChuyenBay> ?? new List<ChuyenBay>();
+}
+
+<style>
+    /* ======================================================= */
+    /* 1. Phần nền cánh máy bay (Hero Section) */
+    /* ======================================================= */
+    .hero-section {
+        background-image: url('/images/banner.jpg');
+        background-size: cover;
+        background-position: center;
+        height: 80vh;
+        min-height: 500px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -80px;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        max-width: 1000px;
+        padding-top: 50px;
+    }
+
+    .search-box {
+        background-color: #ffffff;
+        border-radius: 8px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        margin-top: 20px;
+    }
+
+        .search-box .form-select:focus, .search-box .form-control:focus {
+            box-shadow: none;
+            border-color: #ced4da;
+        }
+
+    /* CSS cho nút Tăng/Giảm số lượng người */
+    .btn-counter {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        font-weight: bold;
+    }
+
+    /* ======================================================= */
+    /* 2. Phần Ưu Đãi */
+    /* ======================================================= */
+    .section-title {
+        text-align: center;
+        margin-top: 50px;
+        margin-bottom: 30px;
+    }
+
+        .section-title h2 {
+            color: #00bcd4;
+            font-weight: bold;
+            font-size: 32px;
+        }
+
+        .section-title p {
+            color: #555;
+            font-size: 15px;
+        }
+
+    .offer-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 0;
+        height: 250px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .offer-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s;
+        }
+
+        .offer-card:hover img {
+            transform: scale(1.1);
+        }
+
+    .offer-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 15px;
+        color: white;
+    }
+
+    .offer-text-sm {
+        font-size: 13px;
+        margin: 0;
+    }
+
+    .offer-price {
+        color: #00bcd4;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    /* ======================================================= */
+    /* 3. Phần Thành Phố Lớn (Nội địa Việt Nam) */
+    /* ======================================================= */
+    .city-section {
+        background-image: url('/images/bg-city.jpg');
+        background-size: cover;
+        background-position: center;
+        background-color: rgba(255, 255, 255, 0.85);
+        background-blend-mode: overlay;
+        padding: 60px 0;
+        margin-top: 50px;
+    }
+
+    .city-card {
+        background: white;
+        border-radius: 8px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        transition: 0.3s;
+    }
+
+        .city-card:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+        }
+
+        .city-card img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+    .city-info h5 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .city-info p {
+        margin: 0;
+        font-size: 12px;
+        color: #888;
+    }
+</style>
+
+<div class="hero-section">
+    <div class="hero-overlay"></div>
+    <div class="hero-content text-center px-3">
+        <h1 class="text-white fw-bold" style="font-size: 4rem; letter-spacing: 2px;">BAY CÙNG TRAVELZ</h1>
+
+        <div class="search-box text-start mx-auto" style="max-width: 950px;">
+            <div class="d-flex mb-3 align-items-center" style="gap: 20px;">
+                <select id="loaiVe" name="loaiVe" class="form-select border-0 fw-bold shadow-none cursor-pointer" style="width: auto; background-color: transparent; padding-left: 0; font-size: 15px;">
+                    <option value="khuhoi">Khứ hồi</option>
+                    <option value="motchieu">Một chiều</option>
+                </select>
+
+                <select name="hangGhe" class="form-select border-0 fw-bold shadow-none cursor-pointer" style="width: auto; background-color: transparent; font-size: 15px;">
+                    <option value="phothong">Phổ thông</option>
+                    <option value="thuonggia">Thương gia</option>
+                </select>
+
+                <div class="dropdown">
+                    <div class="fw-bold cursor-pointer d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" style="font-size: 15px;">
+                        <span id="hienThiSoNguoi">1 Người lớn</span> <i class="fas fa-chevron-down ms-2" style="font-size: 11px;"></i>
+                    </div>
+
+                    <div class="dropdown-menu p-3 shadow-lg border-0" style="min-width: 280px; border-radius: 10px;">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <div class="fw-bold text-dark">Người lớn</div>
+                                <div class="text-muted" style="font-size: 12px;">Từ 12 tuổi trở lên</div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button type="button" class="btn btn-outline-secondary btn-counter rounded-circle" id="btnGiamNguoiLon">-</button>
+                                <span class="mx-3 fw-bold fs-5" id="soNguoiLon">1</span>
+                                <button type="button" class="btn btn-outline-info btn-counter rounded-circle" id="btnTangNguoiLon">+</button>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="fw-bold text-dark">Trẻ nhỏ</div>
+                                <div class="text-muted" style="font-size: 12px;">Dưới 12 tuổi</div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button type="button" class="btn btn-outline-secondary btn-counter rounded-circle" id="btnGiamTreEm" disabled>-</button>
+                                <span class="mx-3 fw-bold fs-5" id="soTreEm">0</span>
+                                <button type="button" class="btn btn-outline-info btn-counter rounded-circle" id="btnTangTreEm">+</button>
+                            </div>
+                        </div>
+
+                        <div class="text-end mt-3">
+                            <button type="button" class="btn btn-info btn-sm text-white fw-bold px-3" onclick="document.querySelector('[data-bs-toggle=\'dropdown\']').click()">Xong</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <form asp-controller="ChuyenBay" asp-action="TimKiem" method="get" id="formTimKiem">
+                <input type="hidden" name="soNguoiLon" id="inputNguoiLon" value="1" />
+                <input type="hidden" name="soTreEm" id="inputTreEm" value="0" />
+
+                <div class="row g-2">
+                    <div class="col-md-3">
+                        <select name="diemDi" id="diemDi" class="form-select border-0" style="background-color: #f5f5f5; height: 50px; font-weight: 500;" required>
+                            <option value="">-- Điểm đi --</option>
+                            @foreach (var sb in dsSanBay)
+                            {
+                                <option value="@sb.Id">@sb.TenThanhPho (@sb.MaSanBay)</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <select name="diemDen" id="diemDen" class="form-select border-0" style="background-color: #f5f5f5; height: 50px; font-weight: 500;" required>
+                            <option value="">-- Điểm đến --</option>
+                            @foreach (var sb in dsSanBay)
+                            {
+                                <option value="@sb.Id">@sb.TenThanhPho (@sb.MaSanBay)</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <input type="date" name="ngayDi" id="ngayDi" class="form-control border-0" style="background-color: #f5f5f5; height: 50px; font-weight: 500;" required />
+                    </div>
+
+                    <div class="col-md-2">
+                        <input type="date" name="ngayVe" id="ngayVe" class="form-control border-0" style="background-color: #f5f5f5; height: 50px; font-weight: 500;" />
+                    </div>
+
+                    <div class="col-md-2">
+                        <button type="submit" class="btn w-100 fw-bold text-white" style="background-color: #ff5722; height: 50px; font-size: 16px;">
+                            Tìm kiếm
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="section-title">
+        <h2>Ưu Đãi</h2>
+        <p>Nhấp vào đăng kí để nhận nhiều thông tin ưu đãi ngay</p>
+    </div>
+
+    <div class="row g-1">
+        @{
+            string[] anhMinhHoa = { "/images/offer1.jpg", "/images/offer2.jpg", "/images/offer3.jpg", "/images/offer4.jpg" };
+            int count = 0;
+        }
+
+        @if (dsUuDai.Any())
+        {
+            foreach (var item in dsUuDai)
+            {
+                var tenDi = dsSanBay.FirstOrDefault(s => s.Id == item.DiemDiId)?.TenThanhPho ?? "N/A";
+                var maDi = dsSanBay.FirstOrDefault(s => s.Id == item.DiemDiId)?.MaSanBay ?? "";
+                var tenDen = dsSanBay.FirstOrDefault(s => s.Id == item.DiemDenId)?.TenThanhPho ?? "N/A";
+                var maDen = dsSanBay.FirstOrDefault(s => s.Id == item.DiemDenId)?.MaSanBay ?? "";
+
+                <div class="col-md-3">
+                    <div class="offer-card" onclick="window.location.href='/Ve/ChonGhe?chuyenBayId=@item.Id'">
+                        <img src="@anhMinhHoa[count % 4]" alt="@item.HangHangKhong" />
+                        <div class="offer-overlay">
+                            <p class="offer-text-sm">@tenDi (@maDi)<br />To<br />@tenDen (@maDen)</p>
+                            <div class="d-flex justify-content-between align-items-end mt-2">
+                                @if (item.GiaKhuyenMai > 0)
+                                {
+                                    <span class="text-decoration-line-through text-muted small" style="font-size: 10px;">@item.GiaVe.ToString("N0") VNĐ</span>
+                                    <span class="offer-price">@item.GiaKhuyenMai.ToString("N0") VNĐ</span>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                    <span class="offer-price">@item.GiaVe.ToString("N0") VNĐ</span>
+                                }
+                                <span class="small" style="font-size: 10px;">@item.ThoiGianDi.ToString("yyyy-MM-dd")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                count++;
+            }
+        }
+        else
+        {
+            <div class="col-12 text-center py-5">
+                <p class="text-muted italic">Hiện tại chưa có ưu đãi chuyến bay nào.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<div class="city-section">
+    <div class="container">
+        <div class="section-title mt-0">
+            <h2>Thành Phố Lớn</h2>
+            <p>Khám phá những điểm đến tuyệt vời nhất dọc miền đất nước hình chữ S.</p>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="city-card">
+                            <img src="/images/dalat.jpg" alt="Đà Lạt" />
+                            <div class="city-info">
+                                <h5>ĐÀ LẠT</h5>
+                                <p>Khách sạn: <span class="text-danger fw-bold">673</span> | Sức chứa: <span class="text-danger fw-bold">38.000</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="city-card">
+                            <img src="/images/hcm.jpg" alt="HCM" />
+                            <div class="city-info">
+                                <h5>HỒ CHÍ MINH</h5>
+                                <p>Khách sạn: <span class="text-danger fw-bold">641</span> | Sức chứa: <span class="text-danger fw-bold">44.000</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="city-card">
+                            <img src="/images/hanoi.jpg" alt="Hà Nội" />
+                            <div class="city-info">
+                                <h5>HÀ NỘI</h5>
+                                <p>Khách sạn: <span class="text-danger fw-bold">511</span> | Sức chứa: <span class="text-danger fw-bold">31.000</span></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="city-card">
+                            <img src="/images/danang.jpg" alt="Đà Nẵng" />
+                            <div class="city-info">
+                                <h5>ĐÀ NẴNG</h5>
+                                <p>Khách sạn: <span class="text-danger fw-bold">1.016</span> | Sức chứa: <span class="text-danger fw-bold">69.000</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // --- LOGIC CHỌN SỐ LƯỢNG NGƯỜI ---
+        let nguoiLon = 1;
+        let treEm = 0;
+
+        const spanNguoiLon = document.getElementById("soNguoiLon");
+        const spanTreEm = document.getElementById("soTreEm");
+        const hienThiSoNguoi = document.getElementById("hienThiSoNguoi");
+        const btnGiamNguoiLon = document.getElementById("btnGiamNguoiLon");
+        const btnGiamTreEm = document.getElementById("btnGiamTreEm");
+
+        const inputNguoiLon = document.getElementById("inputNguoiLon");
+        const inputTreEm = document.getElementById("inputTreEm");
+
+        function capNhatHienThi() {
+            spanNguoiLon.innerText = nguoiLon;
+            spanTreEm.innerText = treEm;
+
+            inputNguoiLon.value = nguoiLon;
+            inputTreEm.value = treEm;
+
+            let text = nguoiLon + " Người lớn";
+            if (treEm > 0) {
+                text += ", " + treEm + " Trẻ nhỏ";
+            }
+            hienThiSoNguoi.innerText = text;
+
+            btnGiamNguoiLon.disabled = (nguoiLon <= 1);
+            btnGiamTreEm.disabled = (treEm <= 0);
+        }
+
+        document.getElementById("btnTangNguoiLon").addEventListener("click", function (e) {
+            e.stopPropagation();
+            if(nguoiLon < 9) { nguoiLon++; capNhatHienThi(); }
+        });
+
+        document.getElementById("btnGiamNguoiLon").addEventListener("click", function (e) {
+            e.stopPropagation();
+            if (nguoiLon > 1) { nguoiLon--; capNhatHienThi(); }
+        });
+
+        document.getElementById("btnTangTreEm").addEventListener("click", function (e) {
+            e.stopPropagation();
+            if(treEm < 9) { treEm++; capNhatHienThi(); }
+        });
+
+        document.getElementById("btnGiamTreEm").addEventListener("click", function (e) {
+            e.stopPropagation();
+            if (treEm > 0) { treEm--; capNhatHienThi(); }
+        });
+
+        // --- LOGIC XỬ LÝ NGÀY ĐI / NGÀY VỀ ---
+        const loaiVe = document.getElementById("loaiVe");
+        const ngayDi = document.getElementById("ngayDi");
+        const ngayVe = document.getElementById("ngayVe");
+        const today = new Date().toISOString().split('T')[0];
+
+        ngayDi.min = today;
+        ngayVe.min = today;
+
+        loaiVe.addEventListener("change", function () {
+            if (this.value === "motchieu") {
+                ngayVe.disabled = true;
+                ngayVe.value = "";
+                ngayVe.removeAttribute("required");
+            } else {
+                ngayVe.disabled = false;
+                ngayVe.setAttribute("required", "required");
+                if (ngayDi.value) { ngayVe.min = ngayDi.value; }
+            }
+        });
+
+        ngayDi.addEventListener("change", function () {
+            ngayVe.min = this.value;
+            if (ngayVe.value && ngayVe.value < this.value) {
+                ngayVe.value = this.value;
+            }
+        });
+
+        document.getElementById("formTimKiem").addEventListener("submit", function (e) {
+            const dDi = document.getElementById("diemDi").value;
+            const dDen = document.getElementById("diemDen").value;
+            if (dDi === dDen && dDi !== "") {
+                e.preventDefault();
+                alert("Điểm đi và Điểm đến không được trùng nhau!");
+            }
+        });
+    });
+</script>

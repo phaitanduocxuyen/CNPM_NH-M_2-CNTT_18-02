@@ -1,0 +1,36 @@
+﻿@model Banvemaybay.Models.TaiKhoan
+@{
+    ViewData["Title"] = "Đăng Ký";
+}
+<div class="container" style="margin-top: 150px; margin-bottom: 100px;">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-danger text-white text-center py-3">
+                    <h4 class="fw-bold mb-0"><i class="fas fa-user-plus"></i> Tạo Tài Khoản</h4>
+                </div>
+                <div class="card-body p-4">
+                    @if (ViewBag.Loi != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.Loi</div>
+                    }
+                    <form asp-action="DangKy" method="post">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Họ tên</label>
+                            <input type="text" asp-for="HoTen" class="form-control" required />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Số điện thoại</label>
+                            <input type="tel" asp-for="SoDienThoai" class="form-control" required />
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Mật khẩu</label>
+                            <input type="password" asp-for="MatKhau" class="form-control" required />
+                        </div>
+                        <button type="submit" class="btn btn-danger w-100 fw-bold py-2">ĐĂNG KÝ</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+﻿@model Banvemaybay.Models.ChuyenBay
+@using Banvemaybay.Models
+@{
+    Layout = null;
+    var dsSanBay = ViewBag.DanhSachSanBay as List<SanBay> ?? new List<SanBay>();
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thêm Chuyến Bay</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow p-4 border-0">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="text-primary fw-bold"><i class="fas fa-plus-circle"></i> Thêm Chuyến Bay Mới</h3>
+                        <a href="/Admin/QuanLyChuyenBay" class="btn btn-secondary">Quay Lại</a>
+                    </div>
+
+                    <form asp-controller="Admin" asp-action="ThemChuyenBay" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Mã chuyến bay (VD: VJ123)</label>
+                                <input type="text" asp-for="MaChuyenBay" class="form-control" required />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Hãng Hàng Không</label>
+                                <select asp-for="HangHangKhong" class="form-select">
+                                    <option value="Vietjet Air">Vietjet Air</option>
+                                    <option value="Vietnam Airlines">Vietnam Airlines</option>
+                                    <option value="Bamboo Airways">Bamboo Airways</option>
+                                    <option value="Pacific Airlines">Pacific Airlines</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Nơi Đi</label>
+                                <select asp-for="DiemDiId" class="form-select" required>
+                                    <option value="">-- Chọn thành phố khởi hành --</option>
+                                    @foreach (var sb in dsSanBay)
+                                    {
+                                        <option value="@sb.Id">@sb.TenThanhPho (@sb.MaSanBay)</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Nơi Đến</label>
+                                <select asp-for="DiemDenId" class="form-select" required>
+                                    <option value="">-- Chọn thành phố điểm đến --</option>
+                                    @foreach (var sb in dsSanBay)
+                                    {
+                                        <option value="@sb.Id">@sb.TenThanhPho (@sb.MaSanBay)</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Thời gian đi</label>
+                                <input type="datetime-local" asp-for="ThoiGianDi" class="form-control" required />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Thời gian đến</label>
+                                <input type="datetime-local" asp-for="ThoiGianDen" class="form-control" required />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Giá vé gốc (VNĐ)</label>
+                                <input type="number" asp-for="GiaVe" class="form-control" required />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-danger">Giá khuyến mãi (VNĐ)</label>
+                                <input type="number" asp-for="GiaKhuyenMai" class="form-control" required />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-3 fw-bold fs-5">LƯU CHUYẾN BAY</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

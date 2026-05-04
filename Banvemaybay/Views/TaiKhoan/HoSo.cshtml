@@ -1,0 +1,100 @@
+﻿@model Banvemaybay.Models.TaiKhoan
+@using Banvemaybay.Models
+@{
+    ViewData["Title"] = "Hồ Sơ Cá Nhân";
+    var veCuaToi = ViewBag.VeCuaToi as List<Ve> ?? new List<Ve>();
+    var dsChuyenBay = ViewBag.DanhSachChuyenBay as List<ChuyenBay> ?? new List<ChuyenBay>();
+    var dsSanBay = ViewBag.DanhSachSanBay as List<SanBay> ?? new List<SanBay>();
+}
+
+<div class="container" style="margin-top: 150px; margin-bottom: 100px;">
+    <div class="row">
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0" style="border-radius: 12px;">
+                <div class="card-body text-center p-5">
+                    <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 shadow" style="width: 100px; height: 100px; font-size: 40px;">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <h4 class="fw-bold text-dark">@Model.HoTen</h4>
+                    <p class="text-muted mb-1"><i class="fas fa-phone-alt me-2"></i> @Model.SoDienThoai</p>
+                    <span class="badge bg-primary px-3 py-2 mt-2 rounded-pill"><i class="fas fa-check-circle"></i> Thành viên Travelz</span>
+
+                    <hr class="my-4">
+                    <a asp-action="DangXuat" class="btn btn-outline-danger w-100 fw-bold"><i class="fas fa-sign-out-alt"></i> ĐĂNG XUẤT</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="fw-bold text-info"><i class="fas fa-ticket-alt"></i> VÉ CỦA TÔI</h3>
+                <span class="badge bg-secondary fs-6">@veCuaToi.Count chuyến bay</span>
+            </div>
+
+            @if (!veCuaToi.Any())
+            {
+                <div class="alert alert-light border shadow-sm text-center py-5 rounded-3">
+                    <i class="fas fa-box-open fs-1 text-muted mb-3"></i>
+                    <h5 class="fw-bold text-dark">Bạn chưa đặt chuyến bay nào</h5>
+                    <p class="text-muted">Hãy tìm kiếm và đặt ngay những chuyến đi tuyệt vời cùng Travelz nhé!</p>
+                    <a href="/" class="btn btn-info text-white fw-bold px-4 mt-2">TÌM CHUYẾN BAY NGAY</a>
+                </div>
+            }
+            else
+            {
+                foreach (var ve in veCuaToi)
+                {
+                    // Lấy thông tin chuyến bay tương ứng
+                    var cb = dsChuyenBay.FirstOrDefault(c => c.Id == ve.ChuyenBayId);
+                    if (cb != null)
+                    {
+                        var tenDi = dsSanBay.FirstOrDefault(s => s.Id == cb.DiemDiId)?.TenThanhPho ?? "N/A";
+                        var maDi = dsSanBay.FirstOrDefault(s => s.Id == cb.DiemDiId)?.MaSanBay ?? "";
+                        var tenDen = dsSanBay.FirstOrDefault(s => s.Id == cb.DiemDenId)?.TenThanhPho ?? "N/A";
+                        var maDen = dsSanBay.FirstOrDefault(s => s.Id == cb.DiemDenId)?.MaSanBay ?? "";
+
+                        <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px; border-left: 6px solid #ff5722 !important;">
+                            <div class="card-header bg-white border-bottom-0 pt-3 pb-0 d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-muted small"><i class="far fa-clock"></i> Đặt lúc: @ve.NgayDat.ToString("dd/MM/yyyy HH:mm")</span>
+                                <span class="badge bg-success">Đã xác nhận</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 text-center mb-3 mb-md-0">
+                                        <h5 class="fw-bold text-danger mb-0">@cb.HangHangKhong</h5>
+                                        <small class="text-muted">Mã: @cb.MaChuyenBay</small>
+                                    </div>
+                                    <div class="col-md-6 border-start border-end px-4">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div class="text-center">
+                                                <h4 class="fw-bold text-primary mb-0">@cb.ThoiGianDi.ToString("HH:mm")</h4>
+                                                <div class="fw-bold">@maDi</div>
+                                                <small class="text-muted" style="font-size: 11px;">@cb.ThoiGianDi.ToString("dd/MM/yyyy")</small>
+                                            </div>
+                                            <div class="text-center flex-grow-1 px-2">
+                                                <i class="fas fa-plane text-info"></i>
+                                                <hr class="border-info my-0">
+                                            </div>
+                                            <div class="text-center">
+                                                <h4 class="fw-bold text-success mb-0">@cb.ThoiGianDen.ToString("HH:mm")</h4>
+                                                <div class="fw-bold">@maDen</div>
+                                                <small class="text-muted" style="font-size: 11px;">@cb.ThoiGianDen.ToString("dd/MM/yyyy")</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 text-center text-md-end mt-3 mt-md-0">
+                                        <div class="text-muted small">Hành khách:</div>
+                                        <div class="fw-bold text-dark">@ve.HoTen</div>
+                                        <div class="text-muted small mt-2">Ghế đã chọn:</div>
+                                        <div class="fs-5 fw-bold text-info">@ve.GheDaChon</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        </div>
+    </div>
+</div>

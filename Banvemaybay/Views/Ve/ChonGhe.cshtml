@@ -1,0 +1,93 @@
+﻿@{
+    ViewData["Title"] = "Chọn Ghế Chuyến Bay";
+}
+<style>
+    .seat {
+        width: 45px; height: 45px; margin: 6px; border-radius: 8px 8px 4px 4px;
+        cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+        font-weight: bold; transition: 0.2s;
+    }
+    /* Ghế Phổ thông */
+    .seat-eco { border: 2px solid #00bcd4; color: #00bcd4; }
+    .seat-eco:hover:not(.seat-occupied) { background-color: #e0f7fa; }
+    .seat-eco.seat-selected { background-color: #00bcd4; color: white; }
+    
+    /* Ghế Thương gia (VIP) */
+    .seat-vip { border: 2px solid #ff9800; color: #ff9800; }
+    .seat-vip:hover:not(.seat-occupied) { background-color: #fff3e0; }
+    .seat-vip.seat-selected { background-color: #ff9800; color: white; box-shadow: 0 0 10px rgba(255,152,0,0.5); }
+
+    /* Ghế đã bán */
+    .seat-occupied { background-color: #ced4da; color: #6c757d; border-color: #ced4da; cursor: not-allowed; }
+    .aisle { display: inline-block; width: 30px; }
+</style>
+
+<div class="container text-center" style="margin-top: 130px; margin-bottom: 100px;">
+    <h2 class="text-dark fw-bold mb-2">Lựa Chọn Chỗ Ngồi</h2>
+    <p class="text-muted mb-4">Vui lòng chọn chỗ ngồi ưng ý nhất cho chuyến đi của bạn</p>
+
+    <div class="d-flex justify-content-center mb-4" style="gap: 20px;">
+        <div class="d-flex align-items-center"><div class="seat seat-vip me-2" style="width:25px;height:25px;pointer-events:none;"></div><span class="fw-bold text-warning">Thương Gia (+50% Giá)</span></div>
+        <div class="d-flex align-items-center"><div class="seat seat-eco me-2" style="width:25px;height:25px;pointer-events:none;"></div><span class="fw-bold text-info">Phổ Thông</span></div>
+        <div class="d-flex align-items-center"><div class="seat seat-occupied me-2" style="width:25px;height:25px;pointer-events:none;"></div><span class="fw-bold text-muted">Đã Bán</span></div>
+    </div>
+
+    <div class="shadow d-inline-block p-4 bg-white rounded-4 border-top border-warning border-5">
+        <h5 class="text-warning fw-bold mb-3"><i class="fas fa-star"></i> KHOANG THƯƠNG GIA</h5>
+        @for (int i = 1; i <= 30; i++)
+        {
+            if (i == 13)
+            {
+                <hr class="my-4 border-secondary opacity-25" />
+                <h5 class="text-info fw-bold mb-3">KHOANG PHỔ THÔNG</h5>
+            }
+
+            string maGhe = i.ToString();
+            string seatClass = i <= 12 ? "seat-vip" : "seat-eco"; // 1-12 là VIP, còn lại là Eco
+
+            <div class="seat @seatClass" onclick="toggleSeat(this, '@maGhe')">@maGhe</div>
+            
+            if (i % 6 == 3) { <span class="aisle"></span> }
+            if (i % 6 == 0) { <br /> }
+        }
+    </div>
+
+    <form action="/Ve/XacNhanGhe" method="post" class="mt-5">
+        <input type="hidden" name="chuyenBayId" value="@ViewBag.ChuyenBayId" />
+        <input type="hidden" name="danhSachGhe" id="danhSachGheInput" required />
+        <button type="submit" id="btnTiepTuc" class="btn btn-primary btn-lg fw-bold px-5 shadow" disabled>TIẾP TỤC THANH TOÁN <i class="fas fa-arrow-right ms-2"></i></button>
+    </form>
+</div>
+
+<script>
+    let selectedSeats = [];
+    let occupiedSeats = @Html.Raw(Json.Serialize(ViewBag.GheDaMua ?? new List<string>()));
+
+    document.addEventListener("DOMContentLoaded", function() {
+        if(occupiedSeats && occupiedSeats.length > 0) {
+            occupiedSeats.forEach(function(seatNumber) {
+                let seatElements = document.querySelectorAll('.seat');
+                seatElements.forEach(function(el) {
+                    if(el.innerText.trim() === seatNumber.trim()) {
+                        el.classList.add('seat-occupied');
+                        el.removeAttribute('onclick');
+                    }
+                });
+            });
+        }
+    });
+
+    function toggleSeat(seatElement, seatNumber) {
+        if (seatElement.classList.contains('seat-occupied')) return;
+        
+        if (seatElement.classList.contains('seat-selected')) {
+            seatElement.classList.remove('seat-selected');
+            selectedSeats = selectedSeats.filter(s => s !== seatNumber);
+        } else {
+            seatElement.classList.add('seat-selected');
+            selectedSeats.push(seatNumber);
+        }
+        document.getElementById('danhSachGheInput').value = selectedSeats.join(',');
+        document.getElementById('btnTiepTuc').disabled = selectedSeats.length === 0;
+    }
+</script>

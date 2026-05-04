@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Travelz Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background-color: #f8f9fa; }
+        .sidebar { background-color: #212529; min-height: 100vh; padding: 0; }
+        .sidebar-brand { color: white; text-align: center; padding: 20px 0; border-bottom: 1px solid #495057; font-size: 22px; font-weight: bold; }
+        .nav-link { color: #ced4da; padding: 15px 20px; font-size: 15px; }
+        .nav-link:hover { color: white; background-color: #343a40; }
+        /* Tự động làm sáng menu đang được chọn */
+        .nav-link.active { background-color: #0d6efd; color: white; border-radius: 6px; margin: 5px 15px; width: calc(100% - 30px); }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <div class="col-md-2 sidebar">
+                <div class="sidebar-brand"><i class="fas fa-plane"></i> iDashboard</div>
+                <ul class="nav flex-column mt-3">
+                    <li class="nav-item mb-1"><a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" href="/Admin/Index"><i class="fas fa-home me-2"></i> Thống Kê</a></li>
+                    <li class="nav-item mb-1"><a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "QuanLyVe" ? "active" : "")" href="/Admin/QuanLyVe"><i class="fas fa-ticket-alt me-2"></i> Vé Máy Bay</a></li>
+                    <li class="nav-item mb-1"><a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "QuanLyChuyenBay" ? "active" : "")" href="/Admin/QuanLyChuyenBay"><i class="fas fa-plane-departure me-2"></i> Chuyến Bay</a></li>
+                    <li class="nav-item mb-1"><a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "QuanLySanBay" ? "active" : "")" href="/Admin/QuanLySanBay"><i class="fas fa-map-marker-alt me-2"></i> Sân Bay</a></li>
+                    <li class="nav-item mb-1"><a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "QuanLyKhachHang" ? "active" : "")" href="/Admin/QuanLyKhachHang"><i class="fas fa-users me-2"></i> Khách Hàng</a></li>
+                    <li class="nav-item mt-5"><a class="nav-link text-danger" href="/"><i class="fas fa-sign-out-alt me-2"></i> Về trang khách</a></li>
+                </ul>
+            </div>
+
+            <div class="col-md-10 p-4 bg-light">
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                    <h2 class="fw-bold text-dark text-uppercase">@ViewData["Title"]</h2>
+                    <a href="/TaiKhoan/DangXuat" class="btn btn-outline-danger fw-bold"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a>
+                </div>
+
+                @if (TempData["ThongBao"] != null)
+                {
+                    <div class="alert alert-success fw-bold shadow-sm"><i class="fas fa-check-circle"></i> @TempData["ThongBao"]</div>
+                }
+                @if (TempData["Loi"] != null)
+                {
+                    <div class="alert alert-danger fw-bold shadow-sm"><i class="fas fa-exclamation-triangle"></i> @TempData["Loi"]</div>
+                }
+
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
