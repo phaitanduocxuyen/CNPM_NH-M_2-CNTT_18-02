@@ -1,4 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// ==============================================================================
+// MỤC ĐÍCH / CHỨC NĂNG FILE: Xử lý nghiệp vụ liên quan đến tài khoản người dùng (Đăng ký, Đăng nhập, Hồ sơ).
+// NGƯỜI VIẾT: Nguyễn Văn Huy
+// THỜI GIAN SỬA ĐỔI: 06/05/2026
+// PHIÊN BẢN: 1.0
+// ==============================================================================
+
+using Microsoft.AspNetCore.Mvc;
 using Banvemaybay.Data;
 using Banvemaybay.Models;
 using System.Security.Claims;
@@ -13,6 +20,11 @@ using System.Text;
 
 namespace Banvemaybay.Controllers
 {
+    /// <summary>
+    /// Mục đích / Chức năng: Controller quản lý định danh (Identity) cho đối tượng Khách hàng.
+    /// Cấu trúc: Các hàm hỗ trợ Đăng ký, Xác thực, Ủy quyền và Quản lý hồ sơ cá nhân.
+    /// Người viết: Nguyễn Văn Huy - Thời gian sửa đổi: 06/05/2026
+    /// </summary>
     public class TaiKhoanController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -22,7 +34,10 @@ namespace Banvemaybay.Controllers
             _context = context;
         }
 
-        // Hàm hỗ trợ mã hóa mật khẩu SHA256
+        /// <summary>
+        /// Mục đích: Băm mật khẩu (Dùng chung logic mã hóa từ AdminController).
+        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
+        /// </summary>
         private string MaHoaMatKhau(string matKhau)
         {
             using (SHA256 sha256Hash = SHA256.Create())
@@ -37,9 +52,13 @@ namespace Banvemaybay.Controllers
             }
         }
 
-        // --- ĐĂNG KÝ ---
         public IActionResult DangKy() => View();
 
+        /// <summary>
+        /// Mục đích: Ghi nhận thông tin người dùng mới vào database, gán mặc định vai trò Khách hàng.
+        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
+        /// </summary>
+        /// <param name="model">Đối tượng Tài Khoản chứa dữ liệu form</param>
         [HttpPost]
         public IActionResult DangKy(TaiKhoan model)
         {
@@ -52,7 +71,7 @@ namespace Banvemaybay.Controllers
                 }
 
                 model.VaiTro = "KhachHang";
-                model.MatKhau = MaHoaMatKhau(model.MatKhau); // Mã hóa mật khẩu trước khi lưu
+                model.MatKhau = MaHoaMatKhau(model.MatKhau);
                 _context.TaiKhoans.Add(model);
                 _context.SaveChanges();
 
@@ -62,7 +81,6 @@ namespace Banvemaybay.Controllers
             return View(model);
         }
 
-        // --- ĐĂNG NHẬP (DÀNH RIÊNG CHO KHÁCH HÀNG) ---
         [HttpGet]
         public IActionResult DangNhap(string returnUrl = null)
         {
@@ -70,6 +88,13 @@ namespace Banvemaybay.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Mục đích: Xác thực tài khoản dựa trên SĐT và mật khẩu (Chỉ cấp quyền cho role Khách Hàng).
+        /// Ý nghĩa biến: 'returnUrl' để điều hướng lại trang cũ sau khi đăng nhập xong.
+        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
+        /// </summary>
+        /// <param name="soDienThoai">SĐT người dùng nhập</param>
+        /// <param name="matKhau">Mật khẩu người dùng nhập</param>
         [HttpPost]
         public async Task<IActionResult> DangNhap(string soDienThoai, string matKhau, string returnUrl = null)
         {
@@ -107,33 +132,32 @@ namespace Banvemaybay.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            // Nếu thông tin khớp với Admin hoặc sai mật khẩu đều báo lỗi chung để bảo mật
             ViewBag.Loi = "Số điện thoại hoặc mật khẩu không chính xác!";
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
-        // --- ĐĂNG XUẤT ---
         public async Task<IActionResult> DangXuat()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 
-        // --- TỪ CHỐI TRUY CẬP ---
         public IActionResult TuChoi()
         {
             return Content("Bạn không có quyền truy cập trang này!");
         }
 
-        // --- HỒ SƠ CÁ NHÂN ---
+        /// <summary>
+        /// Mục đích: Truy xuất thông tin cá nhân và lịch sử vé dựa trên Claim SĐT.
+        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
+        /// </summary>
         [Authorize]
         [HttpGet]
         public IActionResult HoSo()
         {
             var sdt = User.FindFirst("SoDienThoai")?.Value;
 
-            // Nếu Admin cố tình vào trang hồ sơ khách hàng mà không có SĐT lưu trong Claim
             if (User.IsInRole("Admin") && string.IsNullOrEmpty(sdt))
             {
                 return RedirectToAction("Index", "Admin");

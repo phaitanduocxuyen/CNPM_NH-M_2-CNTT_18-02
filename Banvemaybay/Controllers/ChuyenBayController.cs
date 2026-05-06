@@ -1,4 +1,11 @@
-﻿using Banvemaybay.Data;
+﻿// ==============================================================================
+// MỤC ĐÍCH / CHỨC NĂNG FILE: Xử lý logic tìm kiếm và liệt kê chuyến bay ngoài Front-end.
+// NGƯỜI VIẾT: Nguyễn Văn Huy
+// THỜI GIAN SỬA ĐỔI: 06/05/2026
+// PHIÊN BẢN: 1.0
+// ==============================================================================
+
+using Banvemaybay.Data;
 using Banvemaybay.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -7,6 +14,11 @@ using System.Linq;
 
 namespace Banvemaybay.Controllers
 {
+    /// <summary>
+    /// Mục đích / Chức năng: Controller truy vấn dữ liệu chuyến bay phục vụ khách hàng tìm kiếm.
+    /// Cấu trúc: Gồm hàm tìm kiếm theo điều kiện và hàm lấy toàn bộ danh sách hiển thị.
+    /// Người viết: Nguyễn Văn Huy - Thời gian sửa đổi: 06/05/2026
+    /// </summary>
     public class ChuyenBayController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,17 +28,24 @@ namespace Banvemaybay.Controllers
             _context = context;
         }
 
-        // =======================================================
-        // TÌM KIẾM CHUYẾN BAY (TỪ TRANG CHỦ)
-        // =======================================================
+        /// <summary>
+        /// Mục đích: Lọc chuyến bay dựa trên điểm xuất phát, điểm đến, ngày và số lượng người.
+        /// Ý nghĩa biến: 'danhSachHopLe' lưu các chuyến bay có đủ số ghế trống yêu cầu.
+        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
+        /// </summary>
+        /// <param name="diemDi">ID Sân bay xuất phát</param>
+        /// <param name="diemDen">ID Sân bay đích</param>
+        /// <param name="ngayDi">Ngày khởi hành (tùy chọn)</param>
+        /// <param name="loaiVe">Một chiều hoặc khứ hồi</param>
+        /// <param name="soNguoiLon">Số khách người lớn</param>
+        /// <param name="soTreEm">Số khách trẻ em</param>
+        /// <returns>Danh sách các chuyến bay thỏa mãn vào View</returns>
         public IActionResult TimKiem(int diemDi, int diemDen, DateTime? ngayDi, string loaiVe, DateTime? ngayVe, int soNguoiLon = 1, int soTreEm = 0)
         {
             var query = _context.ChuyenBays.AsQueryable();
 
-            // Lọc theo Điểm Đi và Điểm Đến
             query = query.Where(c => c.DiemDiId == diemDi && c.DiemDenId == diemDen);
 
-            // Lọc theo Ngày Đi
             if (ngayDi.HasValue)
             {
                 query = query.Where(c => c.ThoiGianDi.Date == ngayDi.Value.Date);
@@ -34,7 +53,12 @@ namespace Banvemaybay.Controllers
 
             var danhSachChuyenBay = query.ToList();
 
-            // VÁ LỖI LOGIC: Lọc bỏ các chuyến bay không đủ ghế trống cho số người yêu cầu
+            // ----------------------------------------------------------------------
+            // ĐOẠN LOGIC PHỨC TẠP: KIỂM TRA SỨC CHỨA CÒN LẠI CỦA CHUYẾN BAY
+            // Thuật toán: Với mỗi chuyến bay lấy ra, truy vấn tất cả các vé đã bán thuộc về nó.
+            // Đếm tổng số ghế đã bán. Nếu (Tổng số ghế - Đã bán) >= Số lượng người yêu cầu 
+            // thì mới đưa chuyến bay đó vào danh sách 'danhSachHopLe' để hiển thị.
+            // ----------------------------------------------------------------------
             int tongGheYeuCau = soNguoiLon + soTreEm;
             var danhSachHopLe = new List<ChuyenBay>();
 
@@ -50,30 +74,29 @@ namespace Banvemaybay.Controllers
                     }
                 }
 
-                // Giả định mỗi chuyến bay có 30 ghế (theo sơ đồ hiển thị của bạn)
                 if ((30 - soGheDaBan) >= tongGheYeuCau)
                 {
                     danhSachHopLe.Add(cb);
                 }
             }
 
-            // Lấy tên thành phố
             ViewBag.TenDiemDi = _context.SanBays.FirstOrDefault(s => s.Id == diemDi)?.TenThanhPho ?? "N/A";
             ViewBag.TenDiemDen = _context.SanBays.FirstOrDefault(s => s.Id == diemDen)?.TenThanhPho ?? "N/A";
 
-            // Truyền thông tin vé và hành khách ra View để hiển thị
             ViewBag.NgayDi = ngayDi?.ToString("dd/MM/yyyy");
             ViewBag.NgayVe = ngayVe?.ToString("dd/MM/yyyy");
             ViewBag.LoaiVe = loaiVe == "khuhoi" ? "Khứ hồi" : "Một chiều";
             ViewBag.SoNguoiLon = soNguoiLon;
             ViewBag.SoTreEm = soTreEm;
 
-            return View(danhSachHopLe); // Trả về danh sách đã lọc
+            return View(danhSachHopLe);
         }
 
-        // =======================================================
-        // GỢI Ý CHUYẾN BAY (MỤC "DÀNH CHO BẠN")
-        // =======================================================
+        /// <summary>
+        /// Mục đích: Lấy toàn bộ các chuyến bay sắp khởi hành (Dành cho mục Gợi ý).
+        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
+        /// </summary>
+        /// <returns>Danh sách chuyến bay có thời gian >= hiện tại</returns>
         public IActionResult DanhSach()
         {
             ViewBag.DanhSachSanBay = _context.SanBays.ToList();

@@ -1,4 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// ==============================================================================
+// MỤC ĐÍCH / CHỨC NĂNG FILE: Quản lý toàn bộ luồng nghiệp vụ chọn ghế và đặt vé máy bay.
+// NGƯỜI VIẾT: Nguyễn Văn Huy
+// THỜI GIAN SỬA ĐỔI: 06/05/2026
+// PHIÊN BẢN: 1.0
+// ==============================================================================
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Banvemaybay.Data;
 using Banvemaybay.Models;
@@ -8,6 +15,11 @@ using System.Collections.Generic;
 
 namespace Banvemaybay.Controllers
 {
+    /// <summary>
+    /// Mục đích / Chức năng: Controller điều hướng luồng Checkout (Chọn ghế, Tính tiền, Ghi nhận vé vào Database).
+    /// Cấu trúc: 3 bước tương ứng 3 hàm chính ChonGhe -> NhapThongTin -> HoanTatDatVe.
+    /// Người viết: Nguyễn Văn Huy - Thời gian sửa đổi: 06/05/2026
+    /// </summary>
     [Authorize]
     public class VeController : Controller
     {
@@ -18,7 +30,12 @@ namespace Banvemaybay.Controllers
             _context = context;
         }
 
-        // --- CHỌN GHẾ ---
+        /// <summary>
+        /// Mục đích: Render sơ đồ ghế và khóa các ghế đã có người mua.
+        /// Ý nghĩa biến: 'danhSachGheDaMua' tổng hợp tất cả các mã ghế đã được đặt của chuyến bay hiện tại.
+        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
+        /// </summary>
+        /// <param name="chuyenBayId">ID chuyến bay đang chọn</param>
         public IActionResult ChonGhe(int chuyenBayId)
         {
             ViewBag.ChuyenBayId = chuyenBayId;
@@ -45,7 +62,10 @@ namespace Banvemaybay.Controllers
             return RedirectToAction("NhapThongTin");
         }
 
-        // --- NHẬP THÔNG TIN ---
+        /// <summary>
+        /// Mục đích: Phân loại ghế VIP/Thường và tính toán tổng tiền đơn hàng.
+        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
+        /// </summary>
         public IActionResult NhapThongTin()
         {
             if (TempData["ChuyenBayId"] == null || TempData["GheDaChon"] == null)
@@ -71,7 +91,11 @@ namespace Banvemaybay.Controllers
                 ViewBag.SanBayDi = _context.SanBays.Find(chuyenBay.DiemDiId)?.TenThanhPho ?? "N/A";
                 ViewBag.SanBayDen = _context.SanBays.Find(chuyenBay.DiemDenId)?.TenThanhPho ?? "N/A";
 
-                // LOGIC MỚI: TÍNH TIỀN GHẾ VIP VÀ GHẾ THƯỜNG
+                // ----------------------------------------------------------------------
+                // ĐOẠN LOGIC PHỨC TẠP: TÍNH TOÁN GIÁ VÉ THEO LOẠI GHẾ (THƯỜNG/VIP)
+                // Giải thích: Bóc tách danh sách ghế (Dạng chuỗi phân cách bởi dấu ,) thành mảng.
+                // Thuật toán: Nếu chỉ số ghế <= 12 thì đó là ghế VIP. Ghế VIP có giá nhân hệ số 1.5.
+                // ----------------------------------------------------------------------
                 var danhSachGhe = gheDaChon.Split(',');
                 int soGheVip = 0;
                 int soGheThuong = 0;
@@ -79,13 +103,13 @@ namespace Banvemaybay.Controllers
                 foreach (var ghe in danhSachGhe)
                 {
                     if (int.TryParse(ghe, out int soGheInt) && soGheInt <= 12)
-                        soGheVip++; // Ghế 1->12 là VIP
+                        soGheVip++;
                     else
                         soGheThuong++;
                 }
 
                 decimal giaVeGoc = chuyenBay.GiaKhuyenMai > 0 ? chuyenBay.GiaKhuyenMai : chuyenBay.GiaVe;
-                decimal giaVeVip = giaVeGoc * 1.5m; // VIP đắt gấp rưỡi
+                decimal giaVeVip = giaVeGoc * 1.5m;
 
                 ViewBag.SoGheThuong = soGheThuong;
                 ViewBag.SoGheVip = soGheVip;
@@ -97,30 +121,40 @@ namespace Banvemaybay.Controllers
             return View();
         }
 
-        // --- HOÀN TẤT ĐẶT VÉ ---
+        /// <summary>
+        /// Mục đích: Xử lý lưu vé vào Database kèm cơ chế chống trùng lặp ghế ngồi.
+        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
+        /// </summary>
+        /// <param name="hoTen">Tên hành khách</param>
+        /// <param name="soDienThoai">SĐT nhận vé</param>
+        /// <param name="gheDaChon">Chuỗi danh sách ghế</param>
+        /// <param name="chuyenBayId">ID chuyến bay lưu database</param>
         [HttpPost]
         public IActionResult HoanTatDatVe(string hoTen, string soDienThoai, string gheDaChon, int chuyenBayId)
         {
-            // VÁ LỖI: Chặn việc gửi ghế trống
             if (string.IsNullOrEmpty(gheDaChon))
             {
                 return Content($"<script>alert('Bạn chưa chọn ghế ngồi!'); window.location.href='/Ve/ChonGhe?chuyenBayId={chuyenBayId}';</script>", "text/html; charset=utf-8");
             }
 
-            // VÁ LỖI LOGIC: Kiểm tra chống giành giật ghế
+            // ----------------------------------------------------------------------
+            // ĐOẠN LOGIC PHỨC TẠP: KIỂM TRA CHỐNG GIÀNH GIẬT GHẾ KHI THANH TOÁN (RACE CONDITION)
+            // Mục đích: Tránh việc 2 người cùng chọn 1 ghế ở cùng 1 thời điểm dẫn đến lỗi database.
+            // Thuật toán: Dùng hàm Intersect để tìm phần giao giữa mảng ghế đang chọn và 
+            // các ghế đã lưu trong DB. Nếu tồn tại phần giao (Any() == true), báo lỗi ngay.
+            // ----------------------------------------------------------------------
             var cacVeDaBan = _context.Ves.Where(v => v.ChuyenBayId == chuyenBayId).ToList();
             var gheDangChon = gheDaChon.Split(',');
 
             foreach (var ve in cacVeDaBan)
             {
                 var gheDaMua = ve.GheDaChon?.Split(',') ?? new string[0];
-                if (gheDaMua.Intersect(gheDangChon).Any()) // Nếu phát hiện ghế bị trùng
+                if (gheDaMua.Intersect(gheDangChon).Any())
                 {
                     return Content($"<script>alert('Rất tiếc, ghế bạn chọn vừa có người khác nhanh tay đặt mất. Vui lòng chọn ghế khác nhé!'); window.location.href='/Ve/ChonGhe?chuyenBayId={chuyenBayId}';</script>", "text/html; charset=utf-8");
                 }
             }
 
-            // An toàn -> Tiến hành lưu vé
             var veMoi = new Ve
             {
                 ChuyenBayId = chuyenBayId,
