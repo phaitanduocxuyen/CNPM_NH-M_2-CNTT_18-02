@@ -54,7 +54,10 @@
                     <ul class="navbar-nav text-uppercase fw-bold align-items-center" style="font-size: 13px;">
                         <li class="nav-item ms-3"><a class="nav-link" style="color: #00bcd4;" asp-area="" asp-controller="Home" asp-action="Index">HOME</a></li>
                         <li class="nav-item ms-3"><a class="nav-link text-white" asp-controller="ChuyenBay" asp-action="DanhSach">DÀNH CHO BẠN</a></li>
-                        <li class="nav-item ms-3"><a class="nav-link text-white" href="#">BÀI VIẾT</a></li>
+
+                        @* ĐÃ SỬA LINK BÀI VIẾT Ở ĐÂY *@
+                        <li class="nav-item ms-3"><a class="nav-link text-white" href="/BaiViet/Index">BÀI VIẾT</a></li>
+
                         <li class="nav-item ms-3"><a class="nav-link text-white" asp-controller="Home" asp-action="VeChungToi">VỀ CHÚNG TÔI</a></li>
                         @if (User.IsInRole("Admin"))
                         {

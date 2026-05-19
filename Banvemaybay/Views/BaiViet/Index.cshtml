@@ -1,0 +1,40 @@
+﻿@model IEnumerable<dynamic>
+@{
+    ViewData["Title"] = "Cẩm nang du lịch - Bài Viết";
+}
+
+<div class="container" style="margin-top: 130px; margin-bottom: 100px;">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-info" style="font-size: 36px;">Cẩm Nang Du Lịch TRAVELZ</h2>
+        <p class="text-muted">Khám phá những điểm đến tuyệt vời và kinh nghiệm du lịch hữu ích</p>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var bai in Model)
+        {
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0" style="border-radius: 15px; overflow: hidden; transition: transform 0.3s; cursor:pointer;" onmouseover="this.style.transform='translateY(-10px)'" onmouseout="this.style.transform='translateY(0)'">
+
+                    <img src="@bai.AnhDaiDien" class="card-img-top" alt="@bai.TieuDe" style="height: 220px; object-fit: cover;">
+
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between text-muted small mb-2">
+                            <span><i class="far fa-calendar-alt me-1"></i> @bai.NgayDang</span>
+                            <span><i class="far fa-user me-1"></i> @bai.TacGia</span>
+                        </div>
+
+                        <h5 class="card-title fw-bold text-dark mt-2 mb-3" style="line-height: 1.4;">@bai.TieuDe</h5>
+                        <p class="card-text text-secondary" style="font-size: 14px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                            @bai.MoTa
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4 pt-0">
+                        @* ĐÃ SỬA DẤU # THÀNH LINK CHẠY SANG TRANG CHI TIẾT *@
+                        <a href="/BaiViet/ChiTiet?id=@bai.Id" class="btn btn-outline-info w-100 fw-bold" style="border-radius: 8px;">ĐỌC TIẾP <i class="fas fa-arrow-right ms-2"></i></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
