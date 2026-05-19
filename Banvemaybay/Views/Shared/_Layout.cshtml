@@ -13,6 +13,7 @@
     <header>
         <div class="top-bar text-white py-1 w-100" style="font-size: 12px; position: absolute; top: 0; z-index: 1001; background-color: rgba(0,0,0,0.5);">
             <div class="container d-flex justify-content-between align-items-center">
+
                 <div>Một Phút Là Xong</div>
                 <div>
                     <i class="fab fa-facebook-f mx-2 cursor-pointer"></i>
@@ -22,6 +23,7 @@
                     <i class="fab fa-twitter mx-2 cursor-pointer"></i>
                     <i class="fas fa-rss mx-2 cursor-pointer"></i>
                 </div>
+
                 <div>
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -36,13 +38,13 @@
                         <a asp-controller="TaiKhoan" asp-action="DangNhap" class="text-white text-decoration-none"><i class="fas fa-sign-in-alt"></i> Đăng Nhập</a>
                     }
                 </div>
+
             </div>
         </div>
 
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm w-100" style="position: absolute; top: 28px; z-index: 1000; background-color: rgba(0,0,0,0.2);">
             <div class="container pt-2 pb-2">
                 <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
-                    <!-- Sửa thành .png tại đây -->
                     <img src="~/images/TravelHHTD.png" alt="Logo" style="height: 60px; width: auto; object-fit: contain;" />
                 </a>
                 <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
@@ -51,11 +53,9 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
                     <ul class="navbar-nav text-uppercase fw-bold align-items-center" style="font-size: 13px;">
                         <li class="nav-item ms-3"><a class="nav-link" style="color: #00bcd4;" asp-area="" asp-controller="Home" asp-action="Index">HOME</a></li>
-                        <li class="nav-item ms-3"><a class="nav-link text-white" href="#">CHECK IN ONLINE</a></li>
                         <li class="nav-item ms-3"><a class="nav-link text-white" asp-controller="ChuyenBay" asp-action="DanhSach">DÀNH CHO BẠN</a></li>
-                        <li class="nav-item ms-3"><a class="nav-link text-white" href="#">LIÊN HỆ</a></li>
                         <li class="nav-item ms-3"><a class="nav-link text-white" href="#">BÀI VIẾT</a></li>
-                        <li class="nav-item ms-3"><a class="nav-link text-white" href="#">VỀ CHÚNG TÔI</a></li>
+                        <li class="nav-item ms-3"><a class="nav-link text-white" asp-controller="Home" asp-action="VeChungToi">VỀ CHÚNG TÔI</a></li>
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item ms-3">
@@ -77,26 +77,18 @@
     <footer class="text-white mt-5" style="background-color: #2d3436; padding: 60px 0 20px 0;">
         <div class="container">
             <div class="row">
-                <div class="col-md-4 mb-4">
+                <div class="col-md-6 mb-4">
                     <div class="d-flex align-items-center mb-3">
-                        <!-- Sửa thành .png tại đây -->
                         <img src="~/images/TravelHHTD.png" alt="Logo" style="height: 50px; width: auto; object-fit: contain;" />
                     </div>
                     <p class="text-light" style="font-size: 14px; opacity: 0.8;">Hệ thống đặt vé máy bay trực tuyến hàng đầu, mang đến cho bạn những chuyến bay an toàn, tiện lợi với mức giá ưu đãi nhất.</p>
                 </div>
-                <div class="col-md-3 mb-4">
+                <div class="col-md-6 mb-4 text-md-end">
                     <h5 class="fw-bold mb-3" style="color: #00bcd4;">Liên Kết Nhanh</h5>
                     <ul class="list-unstyled" style="line-height: 2.2;">
                         <li><a href="/" class="text-light text-decoration-none">Trang chủ</a></li>
-                        <li><a href="#" class="text-light text-decoration-none">Check-in Online</a></li>
+                        <li><a asp-controller="Home" asp-action="VeChungToi" class="text-light text-decoration-none">Về chúng tôi</a></li>
                         <li><a href="#" class="text-light text-decoration-none">Khuyến mãi</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-5 mb-4">
-                    <h5 class="fw-bold mb-3" style="color: #00bcd4;">Liên Hệ Hỗ Trợ</h5>
-                    <ul class="list-unstyled text-light" style="font-size: 14px; line-height: 1.8; opacity: 0.8;">
-                        <li><i class="fas fa-phone-alt me-2 text-danger"></i> Hotline: <strong>1900 1234</strong></li>
-                        <li><i class="fas fa-envelope me-2 text-danger"></i> Email: support@hhtd.com.vn</li>
                     </ul>
                 </div>
             </div>

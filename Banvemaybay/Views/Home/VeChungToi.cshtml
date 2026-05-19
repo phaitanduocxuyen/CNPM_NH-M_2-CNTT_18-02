@@ -1,0 +1,210 @@
+﻿@{
+    ViewData["Title"] = "Về Chúng Tôi - Nâng Tầm Trải Nghiệm Bay";
+}
+
+<style>
+    /* 1. Hero Banner Premium */
+    .about-hero {
+        background: linear-gradient(135deg, rgba(20, 30, 48, 0.85) 0%, rgba(36, 59, 85, 0.9) 100%), url('/images/banner.jpg');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        height: 50vh;
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -80px;
+        position: relative;
+    }
+
+    .about-hero-content h1 {
+        font-size: 3.5rem;
+        letter-spacing: 3px;
+        background: linear-gradient(to right, #ffffff, #00bcd4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0px 4px 20px rgba(0, 188, 212, 0.3);
+    }
+
+    /* 2. Thẻ giá trị cốt lõi thiết kế Luxury */
+    .value-card {
+        background: #ffffff;
+        border: none;
+        border-radius: 16px;
+        padding: 40px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+    }
+
+        .value-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #00bcd4, #ff5722);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 188, 212, 0.12);
+        }
+
+            .value-card:hover::before {
+                opacity: 1;
+            }
+
+    .icon-wrapper {
+        width: 70px;
+        height: 70px;
+        background-color: rgba(0, 188, 212, 0.1);
+        color: #00bcd4;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        margin-bottom: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .value-card:hover .icon-wrapper {
+        background-color: #00bcd4;
+        color: #ffffff;
+        transform: rotateY(180deg);
+    }
+
+    /* 3. Khối Thống kê số liệu tăng trưởng */
+    .stat-section {
+        background: linear-gradient(135deg, #1e272c 0%, #0f1416 100%);
+        padding: 80px 0;
+        border-radius: 24px;
+        margin-top: 60px;
+        color: white;
+    }
+
+    .stat-number {
+        font-size: 3.5rem;
+        font-weight: 800;
+        color: #00bcd4;
+        line-height: 1;
+        margin-bottom: 10px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    /* 4. Khối Sứ mệnh & Tầm nhìn */
+    .mission-box {
+        border-left: 5px solid #ff5722;
+        padding-left: 25px;
+    }
+
+    .vision-box {
+        border-left: 5px solid #00bcd4;
+        padding-left: 25px;
+    }
+</style>
+
+<div class="about-hero">
+    <div class="about-hero-content text-center text-white mt-5">
+        <h1 class="fw-bold mb-2">TRAVELHHTD</h1>
+        <p class="fs-5 text-uppercase opacity-75" style="letter-spacing: 4px;">Khởi Nguồn Cho Mọi Hành Trình Thượng Lưu</p>
+    </div>
+</div>
+
+<div class="container" style="margin-top: 80px; margin-bottom: 100px;">
+    <div class="row align-items-center mb-5 pb-4">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <span class="badge px-3 py-2 bg-light text-info border mb-3 fw-bold fs-6">VỀ CHÚNG TÔI</span>
+            <h2 class="fw-bold text-dark display-6 mb-4">Cách Mạng Hóa Trải Nghiệm Đặt Vé Trực Tuyến</h2>
+            <p class="text-muted leading-relaxed" style="font-size: 16px; text-align: justify;">
+                Được thành lập với tầm nhìn đưa công nghệ tối tân phục vụ ngành hàng không, <strong>TravelHHTD</strong> tự hào mang lại một hệ thống thông minh giúp tối ưu hóa từng giây phút của hành khách. Chúng tôi cam kết kết nối hàng ngàn chặng bay nội địa và quốc tế với giá cả minh bạch và quy trình đặt vé nhanh gọn bậc nhất.
+            </p>
+            <p class="text-muted leading-relaxed" style="font-size: 16px; text-align: justify;">
+                Không dừng lại ở vai trò là đại lý phân phối, TravelHHTD định hình phân khúc trải nghiệm số đẳng cấp cao – nơi quý khách được tự do lựa chọn sơ đồ ghế VIP cá nhân hóa, quản lý lịch trình thời gian thực độc quyền.
+            </p>
+        </div>
+        <div class="col-lg-6 px-lg-5">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="mission-box mb-4">
+                        <h5 class="fw-bold text-dark text-uppercase"><i class="fas fa-bullseye text-danger me-2"></i> Sứ Mệnh</h5>
+                        <p class="text-muted small">Cung cấp dịch vụ đặt vé an toàn, minh bạch, giảm tối đa thời gian chờ đợi để mang lại niềm vui trọn vẹn cho từng chuyến đi.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="vision-box mb-4">
+                        <h5 class="fw-bold text-dark text-uppercase"><i class="fas fa-eye text-info me-2"></i> Tầm Nhìn</h5>
+                        <p class="text-muted small">Trở thành nền tảng công nghệ đặt vé máy bay trực tuyến được tin dùng hàng đầu Đông Nam Á, tiên phong chuyển đổi số dịch vụ lữ hành.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mb-5">
+        <h2 class="fw-bold text-dark position-relative d-inline-block">Giá Trị Tạo Nên Khác Biệt</h2>
+        <p class="text-muted">Giá trị cốt lõi dẫn đường cho mọi quyết định tại TravelHHTD</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="value-card">
+                <div class="icon-wrapper">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h4 class="fw-bold text-dark mb-3">Tốc Độ Vượt Trội</h4>
+                <p class="text-muted mb-0 small">Hệ thống xử lý thời gian thực, bóc tách thuật toán tìm kiếm chặng bay tối ưu giúp khách hàng hoàn tất giao dịch chỉ trong "Một phút là xong".</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="value-card">
+                <div class="icon-wrapper">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4 class="fw-bold text-dark mb-3">Bảo Mật Tuyệt Đối</h4>
+                <p class="text-muted mb-0 small">Mã hóa mật khẩu hệ thống bằng thuật toán SHA256 tân tiến. Ngăn chặn triệt để tình trạng Race Condition, đảm bảo quyền lợi và tính công bằng trong việc giữ chỗ ngồi VIP.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="value-card">
+                <div class="icon-wrapper">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h4 class="fw-bold text-dark mb-3">Tận Tâm Phục Vụ</h4>
+                <p class="text-muted mb-0 small">Lấy khách hàng làm trọng tâm phát triển. Đội ngũ chăm sóc hỗ trợ kỹ thuật liên tục giúp xử lý hoàn trả hoặc thay đổi thông tin hành trình suôn sẻ nhất.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="stat-section text-center shadow-lg">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="row g-4">
+                    <div class="col-md-3 col-6">
+                        <div class="stat-number">99.8%</div>
+                        <div class="text-uppercase small tracking-wide opacity-75 fw-bold text-white-50">Khách Hàng Hài Lòng</div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-number">1M+</div>
+                        <div class="text-uppercase small tracking-wide opacity-75 fw-bold text-white-50">Vé Đã Được Bán</div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-number">50+</div>
+                        <div class="text-uppercase small tracking-wide opacity-75 fw-bold text-white-50">Đường Bay Kết Nối</div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="stat-number">24/7</div>
+                        <div class="text-uppercase small tracking-wide opacity-75 fw-bold text-white-50">Hỗ Trợ Toàn Diện</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
