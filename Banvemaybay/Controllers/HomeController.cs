@@ -43,5 +43,15 @@ namespace Banvemaybay.Controllers
             ViewBag.DanhSachUuDai = uuDai;
             return View();
         }
+
+        /// <summary>
+        /// Mục đích: Điều hướng sang trang giới thiệu Về Chúng Tôi (About Us) sang xịn mịn.
+        /// Người viết: pHạm Anh Tú - Thời gian sửa: 19/05/2026
+        /// </summary>
+        [HttpGet("VeChungToi")]
+        public IActionResult VeChungToi()
+        {
+            return View();
+        }
     }
 }
