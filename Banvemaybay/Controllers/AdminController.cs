@@ -2,7 +2,7 @@
 // MỤC ĐÍCH / CHỨC NĂNG FILE: Chứa các chức năng dành riêng cho Quản trị viên (Admin)
 // NGƯỜI VIẾT: Nguyễn Văn Huy
 // THỜI GIAN SỬA ĐỔI: 06/05/2026
-// PHIÊN BẢN: 1.0
+// PHIÊN BẢN: 1.1 (Đã tích hợp tự động tạo chuyến bay khứ hồi)
 // ==============================================================================
 
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +21,6 @@ using System;
 
 namespace Banvemaybay.Controllers
 {
-    /// <summary>
-    /// Mục đích / Chức năng: Controller quản lý tổng thể hệ thống (Dashboard, Quản lý chuyến bay, vé, sân bay, khách hàng).
-    /// Cấu trúc: Chia thành 3 module chính: Xác thực Admin, Thống kê doanh thu, Quản lý dữ liệu.
-    /// Người viết: Nguyễn Văn Huy - Thời gian sửa đổi: 06/05/2026
-    /// </summary>
     [Authorize(Roles = "Admin")]
     [Route("Admin")]
     public class AdminController : Controller
@@ -39,11 +34,7 @@ namespace Banvemaybay.Controllers
 
         /// <summary>
         /// Mục đích: Băm mật khẩu đầu vào bằng thuật toán SHA256 để bảo mật.
-        /// Ý nghĩa biến cục bộ: 'bytes' lưu mảng byte đã băm, 'builder' hỗ trợ ghép các byte thành chuỗi hexa.
-        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
         /// </summary>
-        /// <param name="matKhau">Mật khẩu dạng text nguyên bản</param>
-        /// <returns>Chuỗi mật khẩu đã được mã hóa</returns>
         private string MaHoaMatKhau(string matKhau)
         {
             using (SHA256 sha256Hash = SHA256.Create())
@@ -65,11 +56,8 @@ namespace Banvemaybay.Controllers
         }
 
         /// <summary>
-        /// Mục đích: Xử lý logic đăng nhập riêng biệt cho Admin.
-        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
+        /// Xử lý logic đăng nhập hệ thống Admin
         /// </summary>
-        /// <param name="matKhauAdmin">Mã truy cập do Admin nhập</param>
-        /// <returns>Chuyển hướng vào trang Index nếu thành công, hoặc trả về lỗi</returns>
         [AllowAnonymous]
         [HttpPost("Login")]
         public async Task<IActionResult> Login(string matKhauAdmin)
@@ -101,12 +89,6 @@ namespace Banvemaybay.Controllers
             return View();
         }
 
-        /// <summary>
-        /// Mục đích: Trả về giao diện Dashboard và tổng hợp số liệu thống kê.
-        /// Ý nghĩa biến: 'doanhThuThang' là mảng 12 phần tử chứa tổng doanh thu tương ứng từng tháng.
-        /// Người viết: Nguyễn Văn Huy - Thời gian sửa: 06/05/2026
-        /// </summary>
-        /// <returns>View Index kèm danh sách 10 vé mới nhất</returns>
         [HttpGet("Index")]
         public IActionResult Index()
         {
@@ -123,12 +105,6 @@ namespace Banvemaybay.Controllers
 
             decimal[] doanhThuThang = new decimal[12];
 
-            // ----------------------------------------------------------------------
-            // ĐOẠN LOGIC PHỨC TẠP: THUẬT TOÁN TÍNH DOANH THU 12 THÁNG
-            // Giải thích: Lặp qua toàn bộ vé bán trong năm nay, đối chiếu với danh sách 
-            // chuyến bay để lấy giá tiền (ưu tiên giá khuyến mãi). 
-            // Mục đích biến 'soGhe': Đếm số lượng ghế cắt ra từ chuỗi phân cách bởi dấu phẩy.
-            // ----------------------------------------------------------------------
             foreach (var ve in veNamNay)
             {
                 var cb = danhSachChuyenBay.FirstOrDefault(c => c.Id == ve.ChuyenBayId);
@@ -146,7 +122,6 @@ namespace Banvemaybay.Controllers
             return View(danhSachVeMoi);
         }
 
-        // Các hàm CRUD (Quản lý Vé, Chuyến Bay, Sân Bay, Khách Hàng) giữ nguyên logic
         [HttpGet("QuanLyVe")]
         public IActionResult QuanLyVe()
         {
@@ -178,10 +153,39 @@ namespace Banvemaybay.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Thêm chuyến bay mới (Có lựa chọn tự động đảo ngược tạo chuyến về khứ hồi)
+        /// </summary>
         [HttpPost("ThemChuyenBay")]
-        public IActionResult ThemChuyenBay(ChuyenBay chuyenBay)
+        public IActionResult ThemChuyenBay(ChuyenBay chuyenBay, bool taoChuyenVe, string maChuyenVe, DateTime? thoiGianDiVe, DateTime? thoiGianDenVe)
         {
-            if (ModelState.IsValid) { _context.ChuyenBays.Add(chuyenBay); _context.SaveChanges(); return RedirectToAction("QuanLyChuyenBay"); }
+            if (ModelState.IsValid)
+            {
+                _context.ChuyenBays.Add(chuyenBay);
+
+                if (taoChuyenVe && !string.IsNullOrEmpty(maChuyenVe) && thoiGianDiVe.HasValue && thoiGianDenVe.HasValue)
+                {
+                    var chuyenBayVe = new ChuyenBay
+                    {
+                        MaChuyenBay = maChuyenVe.ToUpper(),
+                        HangHangKhong = chuyenBay.HangHangKhong,
+                        GiaVe = chuyenBay.GiaVe,
+                        GiaKhuyenMai = chuyenBay.GiaKhuyenMai,
+                        DiemDiId = chuyenBay.DiemDenId,
+                        DiemDenId = chuyenBay.DiemDiId,
+                        ThoiGianDi = thoiGianDiVe.Value,
+                        ThoiGianDen = thoiGianDenVe.Value
+                    };
+
+                    _context.ChuyenBays.Add(chuyenBayVe);
+                }
+
+                _context.SaveChanges();
+                TempData["ThongBao"] = "Thêm các chuyến bay mới thành công!";
+                return RedirectToAction("QuanLyChuyenBay");
+            }
+
+            ViewBag.DanhSachSanBay = _context.SanBays.ToList();
             return View(chuyenBay);
         }
 

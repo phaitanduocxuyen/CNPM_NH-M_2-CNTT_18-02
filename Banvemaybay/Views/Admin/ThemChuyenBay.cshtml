@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 </head>
 <body class="bg-light">
-    <div class="container mt-5">
+    <div class="container mt-5 mb-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow p-4 border-0">
@@ -22,10 +22,12 @@
                     </div>
 
                     <form asp-controller="Admin" asp-action="ThemChuyenBay" method="post">
-                        <div class="row">
+
+                        <h5 class="text-primary fw-bold mb-3"><i class="fas fa-plane-departure"></i> THÔNG TIN CHIỀU ĐI</h5>
+                        <div class="row mb-3">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Mã chuyến bay (VD: VJ123)</label>
-                                <input type="text" asp-for="MaChuyenBay" class="form-control" required />
+                                <input type="text" asp-for="MaChuyenBay" class="form-control" required style="text-transform: uppercase;" />
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Hãng Hàng Không</label>
@@ -39,7 +41,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Nơi Đi</label>
-                                <select asp-for="DiemDiId" class="form-select" required>
+                                <select asp-for="DiemDiId" id="diemDi" class="form-select" required>
                                     <option value="">-- Chọn thành phố khởi hành --</option>
                                     @foreach (var sb in dsSanBay)
                                     {
@@ -49,7 +51,7 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">Nơi Đến</label>
-                                <select asp-for="DiemDenId" class="form-select" required>
+                                <select asp-for="DiemDenId" id="diemDen" class="form-select" required>
                                     <option value="">-- Chọn thành phố điểm đến --</option>
                                     @foreach (var sb in dsSanBay)
                                     {
@@ -77,11 +79,72 @@
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 mt-3 fw-bold fs-5">LƯU CHUYẾN BAY</button>
+                        <div class="form-check mb-4 bg-light p-3 border rounded shadow-sm">
+                            <input class="form-check-input ms-1" type="checkbox" name="taoChuyenVe" id="taoChuyenVe" value="true">
+                            <label class="form-check-label fw-bold text-success ms-2" for="taoChuyenVe">
+                                <i class="fas fa-sync-alt"></i> TỰ ĐỘNG TẠO CẢ CHUYẾN BAY VỀ (KHỨ HỒI)
+                            </label>
+                        </div>
+
+                        <div id="khungChuyenVe" class="border p-3 rounded mb-4 bg-light shadow-sm border-success border-2" style="display: none;">
+                            <h5 class="text-success fw-bold mb-3"><i class="fas fa-plane-arrival"></i> THÔNG TIN CHIỀU VỀ (Hệ thống tự đảo sân bay)</h5>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold">Mã chuyến về (VD: VJ124)</label>
+                                    <input type="text" name="maChuyenVe" id="maChuyenVe" class="form-control" style="text-transform: uppercase;" />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold">Thời gian cất cánh về</label>
+                                    <input type="datetime-local" name="thoiGianDiVe" id="thoiGianDiVe" class="form-control" />
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="form-label fw-bold">Thời gian hạ cánh về</label>
+                                    <input type="datetime-local" name="thoiGianDenVe" id="thoiGianDenVe" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 fw-bold fs-5 py-2">LƯU CHUYẾN BAY</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const checkbox = document.getElementById('taoChuyenVe');
+                const khungVe = document.getElementById('khungChuyenVe');
+                const maVe = document.getElementById('maChuyenVe');
+                const diVe = document.getElementById('thoiGianDiVe');
+                const denVe = document.getElementById('thoiGianDenVe');
+
+                checkbox.addEventListener('change', function () {
+                    if (this.checked) {
+                        khungVe.style.display = 'block';
+                        maVe.required = true;
+                        diVe.required = true;
+                        denVe.required = true;
+                    } else {
+                        khungVe.style.display = 'none';
+                        maVe.required = false;
+                        diVe.required = false;
+                        denVe.required = false;
+                        maVe.value = "";
+                        diVe.value = "";
+                        denVe.value = "";
+                    }
+                });
+
+                document.querySelector("form").addEventListener("submit", function (e) {
+                    const dDi = document.getElementById("diemDi").value;
+                    const dDen = document.getElementById("diemDen").value;
+                    if (dDi === dDen && dDi !== "") {
+                        e.preventDefault();
+                        alert("Lỗi: Điểm đi và Điểm đến của chiều đi không được phép trùng nhau!");
+                    }
+                });
+            });
+    </script>
 </body>
 </html>

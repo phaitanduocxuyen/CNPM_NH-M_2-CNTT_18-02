@@ -1,10 +1,11 @@
-﻿@model IEnumerable<Banvemaybay.Models.ChuyenBay>
-@{
-    ViewData["Title"] = "Danh Sách Chuyến Bay";
+﻿@{
+    ViewData["Title"] = "Kết Quả Tìm Kiếm";
+    var danhSachChuyenDi = ViewBag.ChuyenDi as List<Banvemaybay.Models.ChuyenBay> ?? new List<Banvemaybay.Models.ChuyenBay>();
+    var danhSachChuyenVe = ViewBag.ChuyenVe as List<Banvemaybay.Models.ChuyenBay> ?? new List<Banvemaybay.Models.ChuyenBay>();
 }
 
 <div class="container" style="margin-top: 150px; margin-bottom: 100px;">
-    <h2 class="text-info fw-bold">Kết Quả Tìm Kiếm</h2>
+    <h2 class="text-info fw-bold mb-4">Kết Quả Tìm Kiếm</h2>
 
     <div class="alert alert-light shadow-sm border-0 mb-4">
         <div class="row align-items-center">
@@ -33,34 +34,63 @@
     </div>
 
     <div class="row mt-4">
-        <div class="col-md-12">
-            @if (!Model.Any())
+        <div class="col-md-@(ViewBag.LoaiVe == "Khứ hồi" ? "6" : "12") mb-4">
+            <h4 class="text-primary fw-bold mb-3"><i class="fas fa-plane-departure"></i> CHIỀU ĐI: @ViewBag.TenDiemDi ➔ @ViewBag.TenDiemDen</h4>
+
+            @if (!danhSachChuyenDi.Any())
             {
-                <div class="alert alert-warning">Không tìm thấy chuyến bay nào phù hợp. Vui lòng chọn ngày hoặc chặng bay khác!</div>
-                <a href="/" class="btn btn-outline-info">Quay lại Trang Chủ</a>
+                <div class="alert alert-warning">Không tìm thấy chuyến đi nào phù hợp.</div>
             }
             else
             {
-                foreach (var item in Model)
+                foreach (var item in danhSachChuyenDi)
                 {
                     <div class="card mb-3 p-3 shadow-sm border-0 border-start border-info border-5">
                         <div class="row align-items-center">
-                            <div class="col-md-3">
-                                <h5 class="text-danger fw-bold">@item.HangHangKhong</h5>
+                            <div class="col-md-5">
+                                <h5 class="text-danger fw-bold mb-1">@item.HangHangKhong</h5>
                                 <span class="badge bg-secondary">Mã: @item.MaChuyenBay</span>
                             </div>
-                            <div class="col-md-6">
-                                <p class="mb-1"><strong>Khởi hành:</strong> @item.ThoiGianDi.ToString("dd/MM/yyyy HH:mm")</p>
-                                <p class="mb-1"><strong>Đến nơi:</strong> @item.ThoiGianDen.ToString("dd/MM/yyyy HH:mm")</p>
-                            </div>
-                            <div class="col-md-3 text-end">
+                            <div class="col-md-7 text-end">
+                                <p class="mb-1 text-muted small">Khởi hành: <strong>@item.ThoiGianDi.ToString("HH:mm")</strong></p>
                                 <h5 class="text-success fw-bold">@item.GiaVe.ToString("N0") VNĐ</h5>
-                                <a href="/Ve/ChonGhe?chuyenBayId=@item.Id" class="btn btn-info text-white fw-bold w-100">CHỌN VÉ</a>
+                                <a href="/Ve/ChonGhe?chuyenBayId=@item.Id" class="btn btn-info text-white fw-bold btn-sm w-100 mt-2">CHỌN CHIỀU ĐI</a>
                             </div>
                         </div>
                     </div>
                 }
             }
         </div>
+
+        @if (ViewBag.LoaiVe == "Khứ hồi")
+        {
+            <div class="col-md-6 mb-4 border-start">
+                <h4 class="text-success fw-bold mb-3"><i class="fas fa-plane-arrival"></i> CHIỀU VỀ: @ViewBag.TenDiemDen ➔ @ViewBag.TenDiemDi</h4>
+
+                @if (!danhSachChuyenVe.Any())
+                {
+                    <div class="alert alert-warning">Không tìm thấy chuyến về ngược lại nào phù hợp vào ngày @ViewBag.NgayVe!</div>
+                }
+                else
+                {
+                    foreach (var item in danhSachChuyenVe)
+                    {
+                        <div class="card mb-3 p-3 shadow-sm border-0 border-start border-success border-5">
+                            <div class="row align-items-center">
+                                <div class="col-md-5">
+                                    <h5 class="text-danger fw-bold mb-1">@item.HangHangKhong</h5>
+                                    <span class="badge bg-secondary">Mã: @item.MaChuyenBay</span>
+                                </div>
+                                <div class="col-md-7 text-end">
+                                    <p class="mb-1 text-muted small">Khởi hành: <strong>@item.ThoiGianDi.ToString("HH:mm")</strong></p>
+                                    <h5 class="text-success fw-bold">@item.GiaVe.ToString("N0") VNĐ</h5>
+                                    <a href="/Ve/ChonGhe?chuyenBayId=@item.Id" class="btn btn-success text-white fw-bold btn-sm w-100 mt-2">CHỌN CHIỀU VỀ</a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        }
     </div>
 </div>

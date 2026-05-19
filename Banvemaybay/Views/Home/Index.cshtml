@@ -186,57 +186,57 @@
         <h1 class="text-white fw-bold" style="font-size: 4rem; letter-spacing: 2px;">BAY CÙNG TRAVELZ</h1>
 
         <div class="search-box text-start mx-auto" style="max-width: 950px;">
-            <div class="d-flex mb-3 align-items-center" style="gap: 20px;">
-                <select id="loaiVe" name="loaiVe" class="form-select border-0 fw-bold shadow-none cursor-pointer" style="width: auto; background-color: transparent; padding-left: 0; font-size: 15px;">
-                    <option value="khuhoi">Khứ hồi</option>
-                    <option value="motchieu">Một chiều</option>
-                </select>
-
-                <select name="hangGhe" class="form-select border-0 fw-bold shadow-none cursor-pointer" style="width: auto; background-color: transparent; font-size: 15px;">
-                    <option value="phothong">Phổ thông</option>
-                    <option value="thuonggia">Thương gia</option>
-                </select>
-
-                <div class="dropdown">
-                    <div class="fw-bold cursor-pointer d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" style="font-size: 15px;">
-                        <span id="hienThiSoNguoi">1 Người lớn</span> <i class="fas fa-chevron-down ms-2" style="font-size: 11px;"></i>
-                    </div>
-
-                    <div class="dropdown-menu p-3 shadow-lg border-0" style="min-width: 280px; border-radius: 10px;">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div>
-                                <div class="fw-bold text-dark">Người lớn</div>
-                                <div class="text-muted" style="font-size: 12px;">Từ 12 tuổi trở lên</div>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <button type="button" class="btn btn-outline-secondary btn-counter rounded-circle" id="btnGiamNguoiLon">-</button>
-                                <span class="mx-3 fw-bold fs-5" id="soNguoiLon">1</span>
-                                <button type="button" class="btn btn-outline-info btn-counter rounded-circle" id="btnTangNguoiLon">+</button>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <div class="fw-bold text-dark">Trẻ nhỏ</div>
-                                <div class="text-muted" style="font-size: 12px;">Dưới 12 tuổi</div>
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <button type="button" class="btn btn-outline-secondary btn-counter rounded-circle" id="btnGiamTreEm" disabled>-</button>
-                                <span class="mx-3 fw-bold fs-5" id="soTreEm">0</span>
-                                <button type="button" class="btn btn-outline-info btn-counter rounded-circle" id="btnTangTreEm">+</button>
-                            </div>
-                        </div>
-
-                        <div class="text-end mt-3">
-                            <button type="button" class="btn btn-info btn-sm text-white fw-bold px-3" onclick="document.querySelector('[data-bs-toggle=\'dropdown\']').click()">Xong</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <form asp-controller="ChuyenBay" asp-action="TimKiem" method="get" id="formTimKiem">
                 <input type="hidden" name="soNguoiLon" id="inputNguoiLon" value="1" />
                 <input type="hidden" name="soTreEm" id="inputTreEm" value="0" />
+
+                <div class="d-flex mb-3 align-items-center" style="gap: 20px;">
+                    <select id="loaiVe" name="loaiVe" class="form-select border-0 fw-bold shadow-none cursor-pointer" style="width: auto; background-color: transparent; padding-left: 0; font-size: 15px;">
+                        <option value="khuhoi">Khứ hồi</option>
+                        <option value="motchieu">Một chiều</option>
+                    </select>
+
+                    <select name="hangGhe" class="form-select border-0 fw-bold shadow-none cursor-pointer" style="width: auto; background-color: transparent; font-size: 15px;">
+                        <option value="phothong">Phổ thông</option>
+                        <option value="thuonggia">Thương gia</option>
+                    </select>
+
+                    <div class="dropdown">
+                        <div class="fw-bold cursor-pointer d-flex align-items-center" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" style="font-size: 15px;">
+                            <span id="hienThiSoNguoi">1 Người lớn</span> <i class="fas fa-chevron-down ms-2" style="font-size: 11px;"></i>
+                        </div>
+
+                        <div class="dropdown-menu p-3 shadow-lg border-0" style="min-width: 280px; border-radius: 10px;">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <div class="fw-bold text-dark">Người lớn</div>
+                                    <div class="text-muted" style="font-size: 12px;">Từ 12 tuổi trở lên</div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <button type="button" class="btn btn-outline-secondary btn-counter rounded-circle" id="btnGiamNguoiLon">-</button>
+                                    <span class="mx-3 fw-bold fs-5" id="soNguoiLon">1</span>
+                                    <button type="button" class="btn btn-outline-info btn-counter rounded-circle" id="btnTangNguoiLon">+</button>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="fw-bold text-dark">Trẻ nhỏ</div>
+                                    <div class="text-muted" style="font-size: 12px;">Dưới 12 tuổi</div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <button type="button" class="btn btn-outline-secondary btn-counter rounded-circle" id="btnGiamTreEm" disabled>-</button>
+                                    <span class="mx-3 fw-bold fs-5" id="soTreEm">0</span>
+                                    <button type="button" class="btn btn-outline-info btn-counter rounded-circle" id="btnTangTreEm">+</button>
+                                </div>
+                            </div>
+
+                            <div class="text-end mt-3">
+                                <button type="button" class="btn btn-info btn-sm text-white fw-bold px-3" onclick="document.querySelector('[data-bs-toggle=\'dropdown\']').click()">Xong</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row g-2">
                     <div class="col-md-3">
@@ -402,7 +402,6 @@
         function capNhatHienThi() {
             spanNguoiLon.innerText = nguoiLon;
             spanTreEm.innerText = treEm;
-
             inputNguoiLon.value = nguoiLon;
             inputTreEm.value = treEm;
 
@@ -420,17 +419,14 @@
             e.stopPropagation();
             if(nguoiLon < 9) { nguoiLon++; capNhatHienThi(); }
         });
-
         document.getElementById("btnGiamNguoiLon").addEventListener("click", function (e) {
             e.stopPropagation();
             if (nguoiLon > 1) { nguoiLon--; capNhatHienThi(); }
         });
-
         document.getElementById("btnTangTreEm").addEventListener("click", function (e) {
             e.stopPropagation();
             if(treEm < 9) { treEm++; capNhatHienThi(); }
         });
-
         document.getElementById("btnGiamTreEm").addEventListener("click", function (e) {
             e.stopPropagation();
             if (treEm > 0) { treEm--; capNhatHienThi(); }
